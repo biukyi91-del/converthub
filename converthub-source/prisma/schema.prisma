@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ConversionJob {
+  id              String    @id @default(cuid())
+  originalName    String
+  storedPath      String
+  sizeBytes       Int
+  sourceFormat    String
+  targetFormat    String
+  category        String
+  settings        String    @default("{}")
+  status          String    @default("queued") // queued | processing | finished | error
+  progress        Int       @default(0) // 0..100
+  error           String?
+  outputName      String?
+  outputPath      String?
+  outputSizeBytes Int?
+  durationMs      Int?
+  createdAt       DateTime  @default(now())
+  completedAt     DateTime?
+
+  @@index([createdAt])
+  @@index([status])
+}
